@@ -8,16 +8,24 @@ export class User {
   @Prop()
   id: string;
 
-  @Prop()
+  @Prop({
+    unique: true,
+  })
   name: string;
 
-  @Prop()
+  @Prop({
+    default: null,
+  })
   age: number;
 
-  @Prop()
+  @Prop({
+    default: '',
+  })
   phone: string;
 
-  @Prop()
+  @Prop({
+    default: '',
+  })
   address: string;
 
   @Prop()
@@ -25,6 +33,16 @@ export class User {
 
   @Prop()
   password: string;
+
+  @Prop({
+    default: 'USER',
+  })
+  role: 'ADMIN' | 'USER';
+
+  @Prop({
+    default: Date.now,
+  })
+  updatedDate: Date;
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
