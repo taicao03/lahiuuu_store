@@ -17,31 +17,29 @@ export class ShopController {
   constructor(private readonly shopService: ShopService) {}
 
   @Post()
-  createShop(@Body() CreateShopDto: CreateShopDto) {
-    return {
-      nameStore: CreateShopDto.nameStore,
-    };
+  async create(@Body() CreateShop: CreateShopDto) {
+    return this.shopService.create(CreateShop);
   }
 
-  @Put(':id')
-  updateShop(@Param('id') id: string, @Body() UpdateShopDto: UpdateShopDto) {
-    return {
-      id,
-      ...UpdateShopDto,
-    };
-  }
+  // @Put(':id')
+  // updateShop(@Param('id') id: string, @Body() UpdateShopDto: UpdateShopDto) {
+  //   return {
+  //     id,
+  //     ...UpdateShopDto,
+  //   };
+  // }
 
   @Get()
-  getShop(@Query('name') name: string) {
-    return this.shopService.getShops();
+  getShop() {
+    return this.shopService.getAll();
   }
 
-  @Get(':id')
-  getOneShop(@Param('id') id: string) {
-    try {
-      return this.shopService.getShop(+id);
-    } catch (error) {
-      throw new NotFoundException();
-    }
-  }
+  // @Get(':id')
+  // getOneShop(@Param('id') id: string) {
+  //   try {
+  //     return this.shopService.getShop(+id);
+  //   } catch (error) {
+  //     throw new NotFoundException();
+  //   }
+  // }
 }

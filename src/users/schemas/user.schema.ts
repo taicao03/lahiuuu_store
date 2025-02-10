@@ -42,6 +42,8 @@ export class User {
   @Prop({
     default: Date.now,
   })
+  @Prop()
+  refreshToken?: string;
   updatedDate: Date;
 }
 

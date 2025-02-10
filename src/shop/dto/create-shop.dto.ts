@@ -1,4 +1,6 @@
+import { IsNotEmpty } from 'class-validator';
+
 export class CreateShopDto {
-  id: number;
+  @IsNotEmpty()
   nameStore: string;
 }

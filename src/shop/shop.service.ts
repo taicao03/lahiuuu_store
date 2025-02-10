@@ -1,56 +1,55 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable, Req } from '@nestjs/common';
 import { CreateShopDto } from './dto/create-shop.dto';
 import { UpdateShopDto } from './dto/update-shop.dto';
+import { Shop, ShopDocument } from './schemas/shop.schema';
+import { Model } from 'mongoose';
+import { InjectModel } from '@nestjs/mongoose';
 @Injectable()
 export class ShopService {
-  private shops = [
-    {
-      id: 1,
-      nameStore: 'J97store',
-    },
-    {
-      id: 2,
-      nameStore: 'kkkstore',
-    },
-    {
-      id: 3,
-      nameStore: 'kkkstore',
-    },
-  ];
+  constructor(@InjectModel(Shop.name) private shopModel: Model<ShopDocument>) {}
+  // getShops() {
+  //   return this.shops;
+  // }
 
-  getShops() {
-    return this.shops;
+  // getShop(id: number) {
+  //   const shop = this.shops.find((shop) => shop.id === +id);
+  //   if (!shop) {
+  //     throw new Error('Shop not found');
+  //   }
+  //   return shop;
+  // }
+
+  getAll() {
+    return this.shopModel.find();
   }
 
-  getShop(id: number) {
-    const shop = this.shops.find((shop) => shop.id === +id);
-    if (!shop) {
-      throw new Error('Shop not found');
-    }
-    return shop;
-  }
-
-  createShop(createShopDto: CreateShopDto) {
-    const newShop = {
-      ...createShopDto,
-    };
-
-    this.shops.push(newShop);
-
-    return newShop;
-  }
-
-  updatedShop(id: number, updateShopDto: UpdateShopDto) {
-    this.shops = this.shops.map((shop) => {
-      if (shop.id === +id) {
-        return {
-          ...shop,
-          ...updateShopDto,
-        };
-      }
-      return shop;
+  async create(createShop: CreateShopDto) {
+    const existingShop = await this.shopModel.findOne({
+      nameStore: createShop.nameStore,
     });
 
-    return this.shops;
+    if (existingShop) {
+      throw new HttpException(
+        'Shop with this name already exists',
+        HttpStatus.CONFLICT,
+      );
+    }
+    const newShop = new this.shopModel(createShop);
+
+    return newShop.save();
   }
+
+  // updatedShop(id: number, updateShopDto: UpdateShopDto) {
+  //   this.shops = this.shops.map((shop) => {
+  //     if (shop.id === +id) {
+  //       return {
+  //         ...shop,
+  //         ...updateShopDto,
+  //       };
+  //     }
+  //     return shop;
+  //   });
+
+  //   return this.shops;
+  // }
 }

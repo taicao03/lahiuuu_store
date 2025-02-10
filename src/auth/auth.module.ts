@@ -8,6 +8,10 @@ import { JwtModule } from '@nestjs/jwt';
 import { LocalStrategy } from './local.strategy';
 import { JwtStrategy } from './jwt.strategy';
 import * as dotenv from 'dotenv';
+import { RefreshTokenStrategy } from './strategies/refreshToken.strategy';
+import { AccessTokenStrategy } from './strategies/accessToken.strategy';
+import { UsersService } from '../users/users.service';
+import { UserRepository } from '../users/repositories/user.repository';
 dotenv.config();
 
 @Module({
@@ -16,10 +20,18 @@ dotenv.config();
     PassportModule,
     JwtModule.register({
       secret: process.env.JWT_SECRET,
-      signOptions: { expiresIn: '60s' },
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  providers: [
+    AuthService,
+    LocalStrategy,
+    JwtStrategy,
+    AccessTokenStrategy,
+    RefreshTokenStrategy,
+    UsersService,
+    UserRepository,
+  ],
+  exports: [AuthService],
 })
 export class AuthModule {}

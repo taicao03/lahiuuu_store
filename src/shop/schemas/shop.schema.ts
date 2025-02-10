@@ -3,23 +3,18 @@ import mongoose from 'mongoose';
 import { HydratedDocument } from 'mongoose';
 import { Product } from '../../product/schemas/product.schema';
 
-export type UserDocument = HydratedDocument<User>;
+export type ShopDocument = HydratedDocument<Shop>;
 
 @Schema()
-export class User {
-  @Prop()
+export class Shop {
+  @Prop({
+    unique: true,
+  })
   nameStore: string;
 
   @Prop()
   listProduct: string;
 
-  @Prop(
-    raw({
-      sizes: { type: String, default: '' },
-      colors: { type: [String], default: [] },
-    }),
-  )
-  productDetails: Record<string, any>;
   @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Product' })
   product: Product;
 
@@ -32,4 +27,4 @@ export class User {
   updatedDate: Date;
 }
 
-export const UserSchema = SchemaFactory.createForClass(User);
+export const ShopSchema = SchemaFactory.createForClass(Shop);
